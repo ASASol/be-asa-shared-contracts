@@ -1,0 +1,9 @@
+﻿using be_asa_shared_contracts.DTO;
+
+namespace be_asa_shared_contracts.Interfaces
+{
+    public interface IPermissionClient
+    {
+        Task<bool> CheckPermissionAsync(PermissionCheckRequest request);
+    }
+}
