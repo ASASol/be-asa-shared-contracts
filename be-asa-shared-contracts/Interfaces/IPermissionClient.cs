@@ -4,6 +4,6 @@ namespace be_asa_shared_contracts.Interfaces
 {
     public interface IPermissionClient
     {
-        Task<bool> CheckPermissionAsync(PermissionCheckRequest request);
+        Task<bool> CheckPermissionAsync(PermissionCheckRequest request, string bearerToken);
     }
 }
