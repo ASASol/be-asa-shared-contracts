@@ -4,6 +4,7 @@
     {
         AUTHENTICATION,
         FOOD_ORDER,
-        HOTEL
+        HOTEL,
+        TEST
     }
 }

@@ -3,5 +3,6 @@
     public enum UserSettingKey
     {
         DEFAULT_LANGUAGE,
+        TEST
     }
 }
