@@ -5,6 +5,6 @@
         AUTHENTICATION,
         FOOD_ORDER,
         HOTEL,
-        TEST
+        WEBSITE
     }
 }
