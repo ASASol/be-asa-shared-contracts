@@ -5,6 +5,7 @@
         AUTHENTICATION,
         FOOD_ORDER,
         HOTEL,
-        WEBSITE
+        WEBSITE,
+        LOCAL
     }
 }
