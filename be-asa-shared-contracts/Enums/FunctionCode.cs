@@ -67,7 +67,12 @@
         CONTACT_MANAGEMENT,
 
         // Products
-        PRODUCT_MANAGEMENT
+        PRODUCT_MANAGEMENT,
+
+        CONSULTATION_MANAGEMENT,
+
+        FOOTER_MANAGEMENT
+
 
     }
 }
