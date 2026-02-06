@@ -6,6 +6,6 @@ namespace be_asa_shared_contracts.Interfaces
     {
         Task<bool> CheckPermissionAsync(PermissionCheckRequest request, string bearerToken);
         Task<ApiResponse<PermissionCheckResult>> CheckPermissionClientAsync(PermissionCheckRequest request, string bearerToken);
-
+        Task<ApiResponse<PermissionCheckResult>> CheckBasePermissionAsync(string bearerToken);
     }
 }

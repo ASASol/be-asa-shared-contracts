@@ -56,6 +56,7 @@ namespace be_asa_shared_infrastructure.Integrations
                 return false;
             }
         }
+
         public async Task<ApiResponse<PermissionCheckResult>> CheckPermissionClientAsync(PermissionCheckRequest request, string bearerToken)
         {
             try
@@ -111,6 +112,52 @@ namespace be_asa_shared_infrastructure.Integrations
                     new AuthenticationHeaderValue("Bearer", bearerToken.Replace("Bearer ", ""));
             }
         }
-    }
 
+        public async Task<ApiResponse<PermissionCheckResult>> CheckBasePermissionAsync(string bearerToken)
+        {
+            try
+            {
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, "/api/v1/system/permissions/check-base");
+
+                if (!string.IsNullOrWhiteSpace(bearerToken))
+                {
+                    httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken.Replace("Bearer ", ""));
+                }
+
+                // 2. Gửi request
+                var response = await _httpClient.SendAsync(httpRequest);
+
+                // 3. Đọc kết quả
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse<PermissionCheckResult>>();
+
+                if (result == null)
+                {
+                    return new ApiResponse<PermissionCheckResult>
+                    {
+                        StatusCode = (int)response.StatusCode,
+                        Message = "No response from Auth Service",
+                        Data = new PermissionCheckResult { HasPermission = false }
+                    };
+                }
+
+                // 4. Trả về kết quả (Nếu Auth trả 200 thì Data.HasPermission sẽ là true)
+                return new ApiResponse<PermissionCheckResult>
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Message = response.IsSuccessStatusCode ? "OK" : result.Message ?? "Token invalid",
+                    Data = result.Data ?? new PermissionCheckResult { HasPermission = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calling check-base permission");
+                return new ApiResponse<PermissionCheckResult>
+                {
+                    StatusCode = 500,
+                    Message = "Internal error calling Auth Service",
+                    Data = new PermissionCheckResult { HasPermission = false }
+                };
+            }
+        }
+    }
 }
