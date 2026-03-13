@@ -53,7 +53,7 @@ namespace be_asa_shared_infrastructure.Integrations
                     _logger.LogWarning("Error UTC SQL: {Msg}", ex.Message);
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
             }
         }
     }
