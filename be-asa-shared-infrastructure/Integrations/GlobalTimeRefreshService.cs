@@ -31,10 +31,8 @@ namespace be_asa_shared_infrastructure.Integrations
 
                     if (dapperContext != null)
                     {
-                        // conn lúc này tự động hiểu là IDbConnection, không còn là dynamic
                         using var conn = dapperContext.CreateConnection();
 
-                        // Gọi Dapper với kiểu DateTimeOffset rõ ràng
                         var dbTime = await conn.QueryFirstOrDefaultAsync<DateTimeOffset>(
                             "sp_GetSystemTimeUTC",
                             commandType: CommandType.StoredProcedure);
@@ -42,17 +40,17 @@ namespace be_asa_shared_infrastructure.Integrations
                         if (dbTime != default)
                         {
                             timeContext.SetDatabaseUtc(dbTime);
-                            _logger.LogInformation("Đã đồng bộ giờ từ SQL: {DbTime}", dbTime);
+                            _logger.LogInformation("UTC SQL: {DbTime}", dbTime);
                         }
                     }
                     else
                     {
-                        _logger.LogWarning("Không tìm thấy IDapperContext trong DI Container.");
+                        _logger.LogWarning("IDapperContext Not Found");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning("Lỗi đồng bộ giờ: {Msg}", ex.Message);
+                    _logger.LogWarning("Error UTC SQL: {Msg}", ex.Message);
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
