@@ -10,5 +10,7 @@
         public DateTime? DateOfBirth { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public DateTimeOffset CreatedTime { get; set; }
+        public DateTimeOffset? UpdatedTime { get; set; }
     }
 }
