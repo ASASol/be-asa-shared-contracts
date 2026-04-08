@@ -9,6 +9,7 @@
         public string? PaymentMethod { get; set; } = default!;   // Cash / Card / QR / OP
         public string Status { get; set; } = default!;          // Success
         public decimal Amount { get; set; }
+        public string UserName { get; set; }
         public DateTimeOffset PaidAt { get; set; }
     }
 }
