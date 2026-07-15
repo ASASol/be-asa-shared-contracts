@@ -69,27 +69,35 @@ namespace be_asa_shared_infrastructure.Integrations
                 if (!string.IsNullOrWhiteSpace(bearerToken))
                     httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken.Replace("Bearer ", ""));
 
-                var response = await _httpClient.SendAsync(httpRequest);
-
-                var result = await response.Content.ReadFromJsonAsync<ApiResponse<PermissionCheckResult>>();
-
-                if (result?.Data == null)
+                // Forward Passcode Token
+                if (_httpContextAccessor.HttpContext?.Request.Headers.TryGetValue(
+                        "X-Passcode-Token",
+                        out var passcodeToken) == true)
                 {
-                    _logger.LogWarning("Permission check result missing data.");
-                    return new ApiResponse<PermissionCheckResult>
-                    {
-                        StatusCode = (int)response.StatusCode,
-                        Message = "Permission check result missing",
-                        Data = new PermissionCheckResult { HasPermission = false }
-                    };
+                    httpRequest.Headers.TryAddWithoutValidation(
+                        "X-Passcode-Token",
+                        passcodeToken.ToString());
                 }
 
-                // Map trực tiếp StatusCode + Message
+                var response = await _httpClient.SendAsync(httpRequest);
+
+                ApiResponse<PermissionCheckResult>? result = null;
+
+                if (response.Content != null &&
+                    response.Content.Headers.ContentLength > 0)
+                {
+                    result = await response.Content
+                        .ReadFromJsonAsync<ApiResponse<PermissionCheckResult>>();
+                }
+
                 return new ApiResponse<PermissionCheckResult>
                 {
                     StatusCode = (int)response.StatusCode,
-                    Message = response.IsSuccessStatusCode ? "OK" : result.Message ?? "Permission check error",
-                    Data = result.Data
+                    Message = result?.Message ?? response.ReasonPhrase ?? "",
+                    Data = result?.Data ?? new PermissionCheckResult
+                    {
+                        HasPermission = false
+                    }
                 };
             }
             catch (Exception ex)
