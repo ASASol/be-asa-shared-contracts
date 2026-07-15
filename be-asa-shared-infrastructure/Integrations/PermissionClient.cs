@@ -1,5 +1,6 @@
 ﻿using be_asa_shared_contracts.DTO;
 using be_asa_shared_contracts.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Headers;
@@ -11,11 +12,14 @@ namespace be_asa_shared_infrastructure.Integrations
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<PermissionClient> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PermissionClient(HttpClient httpClient, ILogger<PermissionClient> logger)
+
+        public PermissionClient(HttpClient httpClient, ILogger<PermissionClient> logger, IHttpContextAccessor httpContextAccessor )
         {
             _httpClient = httpClient;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<bool> CheckPermissionAsync(PermissionCheckRequest request, string bearerToken)
